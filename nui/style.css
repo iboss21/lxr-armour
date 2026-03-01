@@ -425,7 +425,7 @@ body.cas-stage .ui-stage { display: block; }
   contain: strict;
 }
 
-.cas-armour-hud{
+.lxr-armour-hud{
   position: fixed;
   left: 24px;
   bottom: 24px;
@@ -436,11 +436,11 @@ body.cas-stage .ui-stage { display: block; }
   display: none;
 }
 
-.cas-armour-hud.is-active{
+.lxr-armour-hud.is-active{
   display: block;
 }
 
-.cas-armour-hud-title{
+.lxr-armour-hud-title{
   color: rgba(207,204,204,0.95);
   font-size: 16px;
   letter-spacing: 0.5px;
@@ -448,7 +448,7 @@ body.cas-stage .ui-stage { display: block; }
   text-shadow: 0 2px 8px rgba(0,0,0,0.65);
 }
 
-.cas-armour-hud-row{
+.lxr-armour-hud-row{
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(217,175,107,0.25);
   border-radius: 10px;
@@ -457,14 +457,14 @@ body.cas-stage .ui-stage { display: block; }
   backdrop-filter: blur(2px);
 }
 
-.cas-armour-hud-top{
+.lxr-armour-hud-top{
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
-.cas-armour-hud-icon{
+.lxr-armour-hud-icon{
   width: 28px;
   height: 28px;
   object-fit: contain;
@@ -472,7 +472,7 @@ body.cas-stage .ui-stage { display: block; }
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.65));
 }
 
-.cas-armour-hud-text{
+.lxr-armour-hud-text{
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
@@ -480,12 +480,12 @@ body.cas-stage .ui-stage { display: block; }
   line-height: 1.1;
 }
 
-.cas-armour-hud-slot{
+.lxr-armour-hud-slot{
   color: rgba(217,175,107,0.95);
   font-size: 13px;
 }
 
-.cas-armour-hud-name{
+.lxr-armour-hud-name{
   color: rgba(207,204,204,0.9);
   font-size: 12px;
   white-space: nowrap;
@@ -493,14 +493,14 @@ body.cas-stage .ui-stage { display: block; }
   text-overflow: ellipsis;
 }
 
-.cas-armour-hud-val{
+.lxr-armour-hud-val{
   color: rgba(207,204,204,0.95);
   font-size: 12px;
   flex: 0 0 auto;
   text-shadow: 0 2px 8px rgba(0,0,0,0.65);
 }
 
-.cas-armour-hud-bar{
+.lxr-armour-hud-bar{
   margin-top: 7px;
   height: 10px;
   border-radius: 6px;
@@ -509,7 +509,7 @@ body.cas-stage .ui-stage { display: block; }
   border: 1px solid rgba(0,0,0,0.85);
 }
 
-.cas-armour-hud-fill{
+.lxr-armour-hud-fill{
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, #AD3838 0%, #A39C55 55%, #3BAA6B 100%);

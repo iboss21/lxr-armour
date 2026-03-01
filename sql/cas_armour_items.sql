@@ -1,13 +1,16 @@
 -- =====================================================
--- CAS ARMOUR - VORP Inventory Items
--- Run this SQL on your VORP database to register
+-- LXR ARMOUR — VORP Inventory Items
+-- 🐺 wolves.land | iBoss21 / The Lux Empire
+-- © 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
+--
+-- Run this SQL on your database to register
 -- all 70 armor pieces + 14 crafting materials.
 -- =====================================================
 
 -- =====================================================
 -- EQUIPMENT TABLE (character armor storage)
 -- =====================================================
-CREATE TABLE IF NOT EXISTS `cas_armour_equipment` (
+CREATE TABLE IF NOT EXISTS `lxr_armour_equipment` (
   `char_identifier` VARCHAR(64) NOT NULL,
   `equipment` LONGTEXT NOT NULL,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

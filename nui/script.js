@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const RES_NAME = (typeof GetParentResourceName === "function") ? GetParentResourceName() : "cas-armour";
+  const RES_NAME = (typeof GetParentResourceName === "function") ? GetParentResourceName() : "lxr-armour";
 
   const STATE = {
     open: false,
@@ -418,7 +418,7 @@ function normalizeBonuses(bonuses){
   activatePage("armor");
   clearSelectedPanel();
   markMainDirty();
-  postNui("cas_armour:requestData");
+  postNui("lxr_armour:requestData");
 }
 
 function closeUI(){
@@ -441,7 +441,7 @@ function closeUI(){
     clearSelectedPanel();
   }, 220);
 
-  postNui("cas_armour:close");
+  postNui("lxr_armour:close");
 }
 
 function showSets(){
@@ -578,7 +578,7 @@ function buildSlotsIfNeeded(){
             return;
           }
 
-          postNui("cas_armour:equip", {
+          postNui("lxr_armour:equip", {
             itemName: itemName,
             itemId: itemId,
             targetSlot: targetSlot,
@@ -921,41 +921,41 @@ function renderHud(){
     let row = RENDER.hudRows.get(slot);
     if(!row){
       const el = document.createElement("div");
-      el.className = "cas-armour-hud-row";
+      el.className = "lxr-armour-hud-row";
       el.dataset.slot = slot;
 
       const top = document.createElement("div");
-      top.className = "cas-armour-hud-top";
+      top.className = "lxr-armour-hud-top";
 
       const icon = document.createElement("img");
-      icon.className = "cas-armour-hud-icon";
+      icon.className = "lxr-armour-hud-icon";
       icon.loading = "lazy";
       icon.decoding = "async";
 
       const text = document.createElement("div");
-      text.className = "cas-armour-hud-text";
+      text.className = "lxr-armour-hud-text";
 
       const slotEl = document.createElement("div");
-      slotEl.className = "cas-armour-hud-slot rdr-lino";
+      slotEl.className = "lxr-armour-hud-slot rdr-lino";
 
       const nameEl = document.createElement("div");
-      nameEl.className = "cas-armour-hud-name hapna";
+      nameEl.className = "lxr-armour-hud-name hapna";
 
       text.appendChild(slotEl);
       text.appendChild(nameEl);
 
       const val = document.createElement("div");
-      val.className = "cas-armour-hud-val rdr-lino";
+      val.className = "lxr-armour-hud-val rdr-lino";
 
       top.appendChild(icon);
       top.appendChild(text);
       top.appendChild(val);
 
       const bar = document.createElement("div");
-      bar.className = "cas-armour-hud-bar";
+      bar.className = "lxr-armour-hud-bar";
 
       const fill = document.createElement("div");
-      fill.className = "cas-armour-hud-fill";
+      fill.className = "lxr-armour-hud-fill";
       bar.appendChild(fill);
 
       el.appendChild(top);
@@ -1239,7 +1239,7 @@ function renderStats(){
         const $it = $(ui.draggable);
         const slot = $it.data("slot");
         if(slot){
-          postNui("cas_armour:unequip", { slot: slot });
+          postNui("lxr_armour:unequip", { slot: slot });
         }
       }
     });
@@ -1351,33 +1351,33 @@ function renderStats(){
     STATE.ui.$selectedStats = $("#cas-selected-stats");
     STATE.ui.$setsList = $("#cas-sets-list");
     STATE.ui.$setDetails = $("#cas-set-details");
-    STATE.ui.$hud = $("#cas-armour-hud");
-    STATE.ui.$hudBars = $("#cas-armour-hud-bars");
+    STATE.ui.$hud = $("#lxr-armour-hud");
+    STATE.ui.$hudBars = $("#lxr-armour-hud-bars");
   }
 
   window.addEventListener("message", function(event){
     const data = event.data;
     if(!data) return;
 
-    if(data.action === "cas_armour:open"){
+    if(data.action === "lxr_armour:open"){
       openUI();
       return;
     }
-    if(data.action === "cas_armour:close"){
+    if(data.action === "lxr_armour:close"){
       closeUI();
       return;
     }
-    if(data.action === "cas_armour:setState"){
+    if(data.action === "lxr_armour:setState"){
       applyState(data.payload || {});
       return;
     }
-    if(data.action === "cas_armour:bonePositions"){
+    if(data.action === "lxr_armour:bonePositions"){
       STATE.bonePositions = data.positions;
       positionFloatingSlots();
       return;
     }
-    if(data.action === "cas_armour:ping"){
-      postNui("cas_armour:nuiReady", {});
+    if(data.action === "lxr_armour:ping"){
+      postNui("lxr_armour:nuiReady", {});
       return;
     }
   });
@@ -1395,7 +1395,7 @@ function renderStats(){
 
     setTimeout(() => { preloadCoreAssets(); }, 50);
 
-    postNui("cas_armour:nuiReady", {});
+    postNui("lxr_armour:nuiReady", {});
   });
 
 })();

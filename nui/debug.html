@@ -12,21 +12,21 @@
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"/>
 
   <script>
-    function GetParentResourceName() { return "cas-armour"; }
+    function GetParentResourceName() { return "lxr-armour"; }
 
     (function(){
       const _origReady = [];
       document.addEventListener("DOMContentLoaded", function(){
         const origPost = $.post;
         $.post = function(url, data){
-          const action = url.replace("https://cas-armour/", "");
+          const action = url.replace("https://lxr-armour/", "");
           const payload = typeof data === "string" ? JSON.parse(data) : data;
           console.log("[NUI ->]", action, payload);
 
-          if(action === "cas_armour:requestData"){
+          if(action === "lxr_armour:requestData"){
             setTimeout(() => injectMockState(), 100);
           }
-          if(action === "cas_armour:close"){
+          if(action === "lxr_armour:close"){
             console.log("[DEBUG] UI closed");
           }
           if(action === "slotFocus"){
@@ -35,10 +35,10 @@
           if(action === "slotReset"){
             console.log("[CAM] Reset to full body");
           }
-          if(action === "cas_armour:equip"){
+          if(action === "lxr_armour:equip"){
             console.log("[EQUIP]", payload);
           }
-          if(action === "cas_armour:unequip"){
+          if(action === "lxr_armour:unequip"){
             console.log("[UNEQUIP]", payload);
           }
 
@@ -187,9 +187,9 @@
     </div>
   </div>
 
-  <div id="cas-armour-hud" class="cas-armour-hud">
-    <div class="cas-armour-hud-title rdr-lino">ARMOUR</div>
-    <div id="cas-armour-hud-bars" class="cas-armour-hud-bars"></div>
+  <div id="lxr-armour-hud" class="lxr-armour-hud">
+    <div class="lxr-armour-hud-title rdr-lino">ARMOUR</div>
+    <div id="lxr-armour-hud-bars" class="lxr-armour-hud-bars"></div>
   </div>
 
   <div id="debug-toolbar">
@@ -293,7 +293,7 @@
     function injectMockState(){
       const eq = mockEquipped ? MOCK_EQUIPMENT_FILLED : MOCK_EQUIPMENT_EMPTY;
       window.postMessage({
-        action: "cas_armour:setState",
+        action: "lxr_armour:setState",
         payload: {
           config: MOCK_CONFIG,
           equipment: eq,
@@ -306,7 +306,7 @@
     }
 
     function debugOpen(){
-      window.postMessage({ action: "cas_armour:open" }, "*");
+      window.postMessage({ action: "lxr_armour:open" }, "*");
       setTimeout(() => {
         injectMockState();
         setTimeout(() => debugInjectBones(), 200);
@@ -314,7 +314,7 @@
     }
 
     function debugClose(){
-      window.postMessage({ action: "cas_armour:close" }, "*");
+      window.postMessage({ action: "lxr_armour:close" }, "*");
     }
 
     function debugToggleEquip(){
@@ -325,7 +325,7 @@
 
     function debugInjectBones(){
       window.postMessage({
-        action: "cas_armour:bonePositions",
+        action: "lxr_armour:bonePositions",
         positions: MOCK_BONE_POSITIONS
       }, "*");
       debugLog("Bone positions injected", "log-cam");

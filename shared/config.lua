@@ -1,7 +1,83 @@
--- shared/config.lua
--- Slot-based equipment + armor set system (RedM / VORP / oxmysql)
+--[[
+    ██╗     ██╗  ██╗██████╗        █████╗ ██████╗ ███╗   ███╗ ██████╗ ██╗   ██╗██████╗
+    ██║     ╚██╗██╔╝██╔══██╗      ██╔══██╗██╔══██╗████╗ ████║██╔═══██╗██║   ██║██╔══██╗
+    ██║      ╚███╔╝ ██████╔╝█████╗███████║██████╔╝██╔████╔██║██║   ██║██║   ██║██████╔╝
+    ██║      ██╔██╗ ██╔══██╗╚════╝██╔══██║██╔══██╗██║╚██╔╝██║██║   ██║██║   ██║██╔══██╗
+    ███████╗██╔╝ ██╗██║  ██║      ██║  ██║██║  ██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██║  ██║
+    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+    🐺 LXR Armour — Configuration
+    shared/config.lua
+
+    Slot-based equipment & armor set system for RedM.
+    7 unique armor sets (70 pieces), set bonuses, durability, crafting,
+    environmental effects, AI interaction, and passive abilities.
+
+    ═══════════════════════════════════════════════════════════════════════════════
+    SERVER INFORMATION
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Server:      The Land of Wolves 🐺
+    Developer:   iBoss21 / The Lux Empire
+    Website:     https://www.wolves.land
+    Discord:     https://discord.gg/CrKcWdfd3A
+    Store:       https://theluxempire.tebex.io
+
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Framework Support:
+    - LXR Core  (Primary)
+    - RSG Core  (Primary)
+    - VORP Core (Supported / Legacy)
+
+    Version: 1.0.0
+
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    © 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
+]]
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 🐺 RESOURCE NAME PROTECTION - RUNTIME CHECK
+-- ═══════════════════════════════════════════════════════════════════════════════
+
+local REQUIRED_RESOURCE_NAME = "lxr-armour"
+local currentResourceName = GetCurrentResourceName()
+
+if currentResourceName ~= REQUIRED_RESOURCE_NAME then
+    error(string.format([[
+
+        ═══════════════════════════════════════════════════════════════════════════════
+        ❌ CRITICAL ERROR: RESOURCE NAME MISMATCH ❌
+        ═══════════════════════════════════════════════════════════════════════════════
+
+        Expected: %s
+        Got:      %s
+
+        This resource is branded and must maintain the correct name.
+        Rename the folder to "%s" to continue.
+
+        🐺 wolves.land - The Land of Wolves
+
+        ═══════════════════════════════════════════════════════════════════════════════
+
+    ]], REQUIRED_RESOURCE_NAME, currentResourceName, REQUIRED_RESOURCE_NAME))
+end
+
+-- ████████████████████████████████████████████████████████████████████████████████
+-- ████████████████████████ SERVER BRANDING & INFO ████████████████████████████████
+-- ████████████████████████████████████████████████████████████████████████████████
 
 Config = Config or {}
+
+Config.ServerInfo = {
+    name      = 'The Land of Wolves 🐺',
+    developer = 'iBoss21 / The Lux Empire',
+    website   = 'https://www.wolves.land',
+    discord   = 'https://discord.gg/CrKcWdfd3A',
+    store     = 'https://theluxempire.tebex.io',
+    github    = 'https://github.com/iBoss21',
+}
 
 Config.Debug = true
 Config.RegisterUsableItems = false -- auto-equip armor piece on item use if slot is empty
