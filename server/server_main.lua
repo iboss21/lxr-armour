@@ -1,7 +1,36 @@
+--[[
+    ██╗     ██╗  ██╗██████╗        █████╗ ██████╗ ███╗   ███╗ ██████╗ ██╗   ██╗██████╗
+    ██║     ╚██╗██╔╝██╔══██╗      ██╔══██╗██╔══██╗████╗ ████║██╔═══██╗██║   ██║██╔══██╗
+    ██║      ╚███╔╝ ██████╔╝█████╗███████║██████╔╝██╔████╔██║██║   ██║██║   ██║██████╔╝
+    ██║      ██╔██╗ ██╔══██╗╚════╝██╔══██║██╔══██╗██║╚██╔╝██║██║   ██║██║   ██║██╔══██╗
+    ███████╗██╔╝ ██╗██║  ██║      ██║  ██║██║  ██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██║  ██║
+    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+    🐺 LXR Armour — Server Main Logic
+    server/server_main.lua
+
+    ═══════════════════════════════════════════════════════════════════════════════
+    SERVER INFORMATION
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Server:      The Land of Wolves 🐺
+    Developer:   iBoss21 / The Lux Empire
+    Website:     https://www.wolves.land
+    Discord:     https://discord.gg/CrKcWdfd3A
+    Store:       https://theluxempire.tebex.io
+
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    © 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
+]]
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 🐺 SERVER MAIN
+-- ═══════════════════════════════════════════════════════════════════════════════
 
 local function dprint(...)
   if not Config.Debug then return end
-  print('^3[cas-armour]^7', ...)
+  print('^3[lxr-armour]^7', ...)
 end
 
 local BoneIdSlotMap = {
@@ -151,7 +180,7 @@ local function DefaultEquipment()
 end
 
 local function DBFetchEquipment(charId)
-  local rows = MySQL.query.await('SELECT equipment FROM cas_armour_equipment WHERE char_identifier = ? LIMIT 1', { charId })
+  local rows = MySQL.query.await('SELECT equipment FROM lxr_armour_equipment WHERE char_identifier = ? LIMIT 1', { charId })
   if rows and rows[1] and rows[1].equipment then
     local ok, decoded = pcall(json.decode, rows[1].equipment)
     if ok and type(decoded) == 'table' then
@@ -169,7 +198,7 @@ local function DBSaveEquipment(charId, equipment)
   local encoded = json.encode(equipment)
 
   MySQL.update.await([[
-    INSERT INTO cas_armour_equipment (char_identifier, equipment)
+    INSERT INTO lxr_armour_equipment (char_identifier, equipment)
     VALUES (?, ?)
     ON DUPLICATE KEY UPDATE equipment = VALUES(equipment), updated_at = CURRENT_TIMESTAMP
   ]], { charId, encoded })
@@ -213,7 +242,7 @@ local function SyncToClient(src, openUi)
   local equipment = ServerState.equipmentBySource[src] or DefaultEquipment()
   local inv = FilterArmorItems(FW.GetInventoryItems(src))
 
-  TriggerClientEvent('cas-armour:client:setData', src, {
+  TriggerClientEvent('lxr-armour:client:setData', src, {
     equipment = equipment,
     inventory = inv,
     openUi = openUi == true,
@@ -222,7 +251,7 @@ end
 
 local function SyncEquipmentToClient(src)
   local equipment = ServerState.equipmentBySource[src] or DefaultEquipment()
-  TriggerClientEvent('cas-armour:client:updateEquipment', src, { equipment = equipment })
+  TriggerClientEvent('lxr-armour:client:updateEquipment', src, { equipment = equipment })
 end
 
 local function EnsureLoaded(src)
@@ -655,7 +684,7 @@ local function HandleCraft(src, data)
   SyncToClient(src, false)
 end
 
-RegisterNetEvent('cas-armour:server:loadEquipment', function()
+RegisterNetEvent('lxr-armour:server:loadEquipment', function()
   local src = source
   local charId = GetCharacterId(src)
   if not charId then return end
@@ -664,7 +693,7 @@ RegisterNetEvent('cas-armour:server:loadEquipment', function()
   SyncToClient(src, false)
 end)
 
-RegisterNetEvent('cas-armour:server:requestData', function()
+RegisterNetEvent('lxr-armour:server:requestData', function()
   local src = source
   if not EnsureLoaded(src) then
     FW.Notify(src, 'Character not ready yet.')
@@ -673,23 +702,23 @@ RegisterNetEvent('cas-armour:server:requestData', function()
   SyncToClient(src, false)
 end)
 
-RegisterNetEvent('cas-armour:server:equip', function(data)
+RegisterNetEvent('lxr-armour:server:equip', function(data)
   HandleEquip(source, data)
 end)
 
-RegisterNetEvent('cas-armour:server:unequip', function(data)
+RegisterNetEvent('lxr-armour:server:unequip', function(data)
   HandleUnequip(source, data)
 end)
 
-RegisterNetEvent('cas-armour:server:wear', function(payload)
+RegisterNetEvent('lxr-armour:server:wear', function(payload)
   HandleWear(source, payload)
 end)
 
-RegisterNetEvent('cas-armour:server:wearBatch', function(payload)
+RegisterNetEvent('lxr-armour:server:wearBatch', function(payload)
   HandleWearBatch(source, payload)
 end)
 
-RegisterNetEvent('cas-armour:server:craft', function(data)
+RegisterNetEvent('lxr-armour:server:craft', function(data)
   HandleCraft(source, data)
 end)
 

@@ -1,7 +1,36 @@
+--[[
+    ██╗     ██╗  ██╗██████╗        █████╗ ██████╗ ███╗   ███╗ ██████╗ ██╗   ██╗██████╗
+    ██║     ╚██╗██╔╝██╔══██╗      ██╔══██╗██╔══██╗████╗ ████║██╔═══██╗██║   ██║██╔══██╗
+    ██║      ╚███╔╝ ██████╔╝█████╗███████║██████╔╝██╔████╔██║██║   ██║██║   ██║██████╔╝
+    ██║      ██╔██╗ ██╔══██╗╚════╝██╔══██║██╔══██╗██║╚██╔╝██║██║   ██║██║   ██║██╔══██╗
+    ███████╗██╔╝ ██╗██║  ██║      ██║  ██║██║  ██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██║  ██║
+    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+    🐺 LXR Armour — Client Main Logic
+    client/main.lua
+
+    ═══════════════════════════════════════════════════════════════════════════════
+    SERVER INFORMATION
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Server:      The Land of Wolves 🐺
+    Developer:   iBoss21 / The Lux Empire
+    Website:     https://www.wolves.land
+    Discord:     https://discord.gg/CrKcWdfd3A
+    Store:       https://theluxempire.tebex.io
+
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    © 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
+]]
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 🐺 CLIENT MAIN
+-- ═══════════════════════════════════════════════════════════════════════════════
 
 local function dprint(...)
   if not Config.Debug then return end
-  print('^3[cas-armour]^7', ...)
+  print('^3[lxr-armour]^7', ...)
 end
 
 local CORE_HEALTH  = 0
@@ -235,7 +264,7 @@ local function SendBonePositionsToNui()
     local positions = GetBoneScreenPositions()
     if positions then
       SendNUIMessage({
-        action = 'cas_armour:bonePositions',
+        action = 'lxr_armour:bonePositions',
         positions = positions
       })
       dprint('Bone positions sent to NUI')
@@ -293,7 +322,7 @@ local p = {
   end
 
   SendNUIMessage({
-    action = 'cas_armour:setState',
+    action = 'lxr_armour:setState',
     payload = p
   })
 end
@@ -681,7 +710,7 @@ CreateThread(function()
   end
 end)
 
-RegisterNetEvent('cas-armour:client:applyPoisonTick', function(rawDmg)
+RegisterNetEvent('lxr-armour:client:applyPoisonTick', function(rawDmg)
   local ped = PlayerPedId()
   if ped == 0 or not DoesEntityExist(ped) then return end
   local dmg = tonumber(rawDmg or 0) or 0
@@ -844,7 +873,7 @@ local function Recompute()
   QueueStateToNui()
 end
 
-RegisterNUICallback('cas_armour:nuiReady', function(_, cb)
+RegisterNUICallback('lxr_armour:nuiReady', function(_, cb)
   ClientState.nuiReady = true
   dprint('NUI ready signal received')
   cb({ ok = true })
@@ -855,7 +884,7 @@ CreateThread(function()
   while not ClientState.nuiReady and attempts < 30 do
     Wait(1000)
     attempts = attempts + 1
-    SendNUIMessage({ action = 'cas_armour:ping' })
+    SendNUIMessage({ action = 'lxr_armour:ping' })
     dprint(('NUI ping attempt %d/30'):format(attempts))
   end
   if ClientState.nuiReady then
@@ -873,14 +902,14 @@ RegisterCommand(Config.OpenCommand, function()
 
   if not ClientState.isUiOpen then
     NuiFocus(true)
-    SendNUIMessage({ action = 'cas_armour:open' })
+    SendNUIMessage({ action = 'lxr_armour:open' })
   else
-    SendNUIMessage({ action = 'cas_armour:close' })
+    SendNUIMessage({ action = 'lxr_armour:close' })
   end
 end, false)
 
 RegisterCommand('armorreload', function()
-  TriggerServerEvent('cas-armour:server:loadEquipment')
+  TriggerServerEvent('lxr-armour:server:loadEquipment')
 end, false)
 
 CreateThread(function()
@@ -892,28 +921,28 @@ CreateThread(function()
   end
 end)
 
-RegisterNUICallback('cas_armour:close', function(_, cb)
+RegisterNUICallback('lxr_armour:close', function(_, cb)
   NuiFocus(false)
   cb({ ok = true })
 end)
 
-RegisterNUICallback('cas_armour:requestData', function(_, cb)
-  TriggerServerEvent('cas-armour:server:requestData')
+RegisterNUICallback('lxr_armour:requestData', function(_, cb)
+  TriggerServerEvent('lxr-armour:server:requestData')
   cb({ ok = true })
 end)
 
-RegisterNUICallback('cas_armour:equip', function(data, cb)
-  TriggerServerEvent('cas-armour:server:equip', data)
+RegisterNUICallback('lxr_armour:equip', function(data, cb)
+  TriggerServerEvent('lxr-armour:server:equip', data)
   cb({ ok = true })
 end)
 
-RegisterNUICallback('cas_armour:unequip', function(data, cb)
-  TriggerServerEvent('cas-armour:server:unequip', data)
+RegisterNUICallback('lxr_armour:unequip', function(data, cb)
+  TriggerServerEvent('lxr-armour:server:unequip', data)
   cb({ ok = true })
 end)
 
-RegisterNUICallback('cas_armour:craft', function(data, cb)
-  TriggerServerEvent('cas-armour:server:craft', data)
+RegisterNUICallback('lxr_armour:craft', function(data, cb)
+  TriggerServerEvent('lxr-armour:server:craft', data)
   cb({ ok = true })
 end)
 
@@ -929,7 +958,7 @@ RegisterNUICallback('slotReset', function(_, cb)
   cb('ok')
 end)
 
-RegisterNetEvent('cas-armour:client:setData', function(payload)
+RegisterNetEvent('lxr-armour:client:setData', function(payload)
   if type(payload) ~= 'table' then return end
 
   ClientState.equipment = payload.equipment or { slots = {} }
@@ -938,13 +967,13 @@ RegisterNetEvent('cas-armour:client:setData', function(payload)
   Recompute()
 end)
 
-RegisterNetEvent('cas-armour:client:updateEquipment', function(payload)
+RegisterNetEvent('lxr-armour:client:updateEquipment', function(payload)
   if type(payload) ~= 'table' then return end
   ClientState.equipment = payload.equipment or { slots = {} }
   Recompute()
 end)
 
-RegisterNetEvent('cas-armour:client:notify', function(msg)
+RegisterNetEvent('lxr-armour:client:notify', function(msg)
   if msg and msg ~= '' then
     TriggerEvent('chat:addMessage', { args = { '^3[ARMOR]^7', msg } })
   end
@@ -1092,7 +1121,7 @@ CreateThread(function()
       ClientState.wearQueueHits = 0
       ClientState.wearQueueDirty = false
 
-      TriggerServerEvent('cas-armour:server:wearBatch', { merged = merged })
+      TriggerServerEvent('lxr-armour:server:wearBatch', { merged = merged })
     end
   end
 end)
@@ -1261,7 +1290,7 @@ AddEventHandler('onClientResourceStart', function(res)
     Wait(500)
     CaptureBaseMaxHp()
     Wait(1000)
-    TriggerServerEvent('cas-armour:server:loadEquipment')
+    TriggerServerEvent('lxr-armour:server:loadEquipment')
   end)
 end)
 
@@ -1270,7 +1299,7 @@ RegisterNetEvent('vorp:SelectedCharacter', function()
     Wait(1500)
     CaptureBaseMaxHp()
     Wait(500)
-    TriggerServerEvent('cas-armour:server:loadEquipment')
+    TriggerServerEvent('lxr-armour:server:loadEquipment')
   end)
 end)
 
@@ -1279,12 +1308,12 @@ RegisterNetEvent('RSGCore:Client:OnPlayerLoaded', function()
     Wait(1500)
     CaptureBaseMaxHp()
     Wait(500)
-    TriggerServerEvent('cas-armour:server:loadEquipment')
+    TriggerServerEvent('lxr-armour:server:loadEquipment')
   end)
 end)
 
-RegisterNetEvent('cas-armour:client:forceReload', function()
-  TriggerServerEvent('cas-armour:server:loadEquipment')
+RegisterNetEvent('lxr-armour:client:forceReload', function()
+  TriggerServerEvent('lxr-armour:server:loadEquipment')
 end)
 
 exports('GetEquipment', function()

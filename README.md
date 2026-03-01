@@ -1,21 +1,22 @@
-# CAS Armour (RedM)
+# 🐺 LXR Armour — Advanced Equipment & Armor System for RedM
 
-Slot-based equipment and armor system for RedM with NUI drag-and-drop interface. Supports both VORP and RSGCore frameworks.
+> **wolves.land** | iBoss21 / The Lux Empire | [Store](https://theluxempire.tebex.io) | [Discord](https://discord.gg/CrKcWdfd3A) | [Website](https://www.wolves.land)
+
+Slot-based equipment and armor system for RedM with NUI drag-and-drop interface. Supports **LXR-Core**, **RSGCore**, and **VORP** frameworks with automatic detection.
 
 ## Requirements
-- `vorp_core` or `rsg-core`
-- `vorp_inventory` or `rsg-inventory`
+- `lxr-core` **or** `rsg-core` **or** `vorp_core`
+- `vorp_inventory` (VORP only) **or** `lxr-inventory` / `rsg-inventory`
 - `oxmysql`
 
 ## Installation
 1. Import `sql/cas_armour_equipment.sql` into your database.
-2. Keep the resource folder name as `cas-armour`.
+2. Keep the resource folder name as `lxr-armour`.
 3. Add to `server.cfg`:
 ```
 ensure oxmysql
-ensure vorp_core
-ensure vorp_inventory
-ensure cas-armour
+ensure lxr-core
+ensure lxr-armour
 ```
 
 ## Features
@@ -63,25 +64,28 @@ ensure cas-armour
 
 ## Crafting
 - Blacksmith NPCs at configurable locations (default: Valentine, Annesburg, Rhodes)
-- Uses `vorp_menu` for set/piece selection interface
 - Progress bar with animation during crafting
 
 ## Configuration
 All tuning values are in `shared/config.lua` under `Config.Tuning`, `Config.WeightPenalty`, `Config.ArmorPieces`, and `Config.ArmorSets`.
 
 ## NUI Callbacks
-- `cas_armour:close` - Close the UI
-- `cas_armour:requestData` - Request equipment/inventory data
-- `cas_armour:equip` - Equip an item: `{ pieceId, itemName, itemId, targetSlot, metadata }`
-- `cas_armour:unequip` - Unequip a slot: `{ slot }`
-- `cas_armour:craft` - Craft a piece: `{ pieceId }`
+- `lxr_armour:close` - Close the UI
+- `lxr_armour:requestData` - Request equipment/inventory data
+- `lxr_armour:equip` - Equip an item: `{ pieceId, itemName, itemId, targetSlot, metadata }`
+- `lxr_armour:unequip` - Unequip a slot: `{ slot }`
+- `lxr_armour:craft` - Craft a piece: `{ pieceId }`
 
 ## Exports
 
 **Client:**
-- `exports['cas-armour']:GetEquipment()`
-- `exports['cas-armour']:GetStats()`
-- `exports['cas-armour']:GetActivePassives()`
+- `exports['lxr-armour']:GetEquipment()`
+- `exports['lxr-armour']:GetStats()`
+- `exports['lxr-armour']:GetActivePassives()`
 
 **Server:**
-- `exports['cas-armour']:GetEquipment(source)`
+- `exports['lxr-armour']:GetEquipment(source)`
+
+---
+
+© 2026 iBoss21 / The Lux Empire | [wolves.land](https://www.wolves.land) | All Rights Reserved

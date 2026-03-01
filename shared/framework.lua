@@ -1,3 +1,37 @@
+--[[
+    ██╗     ██╗  ██╗██████╗        █████╗ ██████╗ ███╗   ███╗ ██████╗ ██╗   ██╗██████╗
+    ██║     ╚██╗██╔╝██╔══██╗      ██╔══██╗██╔══██╗████╗ ████║██╔═══██╗██║   ██║██╔══██╗
+    ██║      ╚███╔╝ ██████╔╝█████╗███████║██████╔╝██╔████╔██║██║   ██║██║   ██║██████╔╝
+    ██║      ██╔██╗ ██╔══██╗╚════╝██╔══██║██╔══██╗██║╚██╔╝██║██║   ██║██║   ██║██╔══██╗
+    ███████╗██╔╝ ██╗██║  ██║      ██║  ██║██║  ██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██║  ██║
+    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+    🐺 LXR Armour — Framework Bridge
+    shared/framework.lua
+
+    ═══════════════════════════════════════════════════════════════════════════════
+    SERVER INFORMATION
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Server:      The Land of Wolves 🐺
+    Developer:   iBoss21 / The Lux Empire
+    Website:     https://www.wolves.land
+    Discord:     https://discord.gg/CrKcWdfd3A
+    Store:       https://theluxempire.tebex.io
+
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    Framework Priority:
+      1) LXR-Core  (Primary)
+      2) RSG-Core  (Primary)
+      3) VORP Core (Supported / Legacy)
+
+    © 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
+]]
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 🐺 FRAMEWORK BRIDGE
+-- ═══════════════════════════════════════════════════════════════════════════════
 
 Framework = Framework or {}
 Framework.Name = nil
@@ -5,25 +39,41 @@ Framework.Ready = false
 
 FW = FW or {}
 
+local _lxrCore  = nil
 local _vorpCore = nil
 local _rsgCore  = nil
 
 CreateThread(function()
     Wait(100)
 
-    if GetResourceState('vorp_core') == 'started' then
-        Framework.Name = "vorp"
-        print("^2[cas-armour] VORP Framework detected^7")
+    if GetResourceState('lxr-core') == 'started' then
+        Framework.Name = "lxrcore"
+        print("^2[lxr-armour] LXR-Core Framework detected^7")
     elseif GetResourceState('rsg-core') == 'started' then
         Framework.Name = "rsgcore"
-        print("^2[cas-armour] RSGCore Framework detected^7")
+        print("^2[lxr-armour] RSGCore Framework detected^7")
+    elseif GetResourceState('vorp_core') == 'started' then
+        Framework.Name = "vorp"
+        print("^2[lxr-armour] VORP Framework detected^7")
     else
-        print("^1[cas-armour] ERROR: No supported framework detected! Ensure vorp_core or rsg-core is started.^7")
+        print("^1[lxr-armour] ERROR: No supported framework detected! Ensure lxr-core, rsg-core, or vorp_core is started.^7")
         return
     end
 
     if IsDuplicityVersion() then
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            local ok, core = pcall(function()
+                return exports['lxr-core']:GetCoreObject()
+            end)
+            if ok and core then
+                _lxrCore = core
+                print("^2[lxr-armour] LXR-Core object resolved^7")
+            else
+                print("^1[lxr-armour] ERROR: Could not get LXR-Core object^7")
+                return
+            end
+
+        elseif Framework.Name == "vorp" then
             while not _vorpCore do
                 local ok, core = pcall(function()
                     return exports.vorp_core and exports.vorp_core:GetCore() or nil
@@ -37,7 +87,7 @@ CreateThread(function()
                 end)
                 Wait(500)
             end
-            print("^2[cas-armour] VORP Core resolved^7")
+            print("^2[lxr-armour] VORP Core resolved^7")
 
         elseif Framework.Name == "rsgcore" then
             local ok, core = pcall(function()
@@ -45,9 +95,9 @@ CreateThread(function()
             end)
             if ok and core then
                 _rsgCore = core
-                print("^2[cas-armour] RSGCore object resolved^7")
+                print("^2[lxr-armour] RSGCore object resolved^7")
             else
-                print("^1[cas-armour] ERROR: Could not get RSGCore object^7")
+                print("^1[lxr-armour] ERROR: Could not get RSGCore object^7")
                 return
             end
         end
@@ -67,7 +117,15 @@ if IsDuplicityVersion() then
     end
 
     function FW.GetCharacterId(src)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return nil end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player or not player.PlayerData then return nil end
+            local cid = player.PlayerData.citizenid or player.PlayerData.charIdentifier
+            if not cid then return nil end
+            return tostring(cid)
+
+        elseif Framework.Name == "vorp" then
             if not _vorpCore then return nil end
             local ok, user = pcall(function()
                 return _vorpCore.getUser and _vorpCore.getUser(src) or nil
@@ -97,7 +155,27 @@ if IsDuplicityVersion() then
     end
 
     function FW.GetInventoryItems(src)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return {} end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player or not player.PlayerData or not player.PlayerData.items then return {} end
+
+            local items = {}
+            for _, it in pairs(player.PlayerData.items) do
+                if it and it.name and it.name ~= '' then
+                    table.insert(items, {
+                        id       = it.slot,
+                        name     = it.name,
+                        label    = it.label or it.name,
+                        desc     = it.description or '',
+                        count    = it.amount or it.count or 1,
+                        metadata = it.info or {},
+                    })
+                end
+            end
+            return items
+
+        elseif Framework.Name == "vorp" then
             local raw = AwaitExport(function(cb)
                 exports.vorp_inventory:getUserInventoryItems(src, cb)
             end) or {}
@@ -142,7 +220,17 @@ if IsDuplicityVersion() then
     end
 
     function FW.CanCarryItem(src, itemName, amount)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return false end
+            if exports['lxr-inventory'] and exports['lxr-inventory'].CanAddItem then
+                local ok, res = pcall(function()
+                    return exports['lxr-inventory']:CanAddItem(src, itemName, amount)
+                end)
+                if ok then return res ~= false end
+            end
+            return true
+
+        elseif Framework.Name == "vorp" then
             local res = AwaitExport(function(cb)
                 exports.vorp_inventory:canCarryItem(src, itemName, amount, cb)
             end)
@@ -163,7 +251,20 @@ if IsDuplicityVersion() then
     end
 
     function FW.AddItem(src, itemName, amount, metadata)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return false end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player then return false end
+
+            local info = metadata or {}
+            local result = player.Functions.AddItem(itemName, amount, nil, info)
+            local sharedItem = _lxrCore.Shared.Items and _lxrCore.Shared.Items[itemName]
+            if sharedItem then
+                TriggerClientEvent('lxr-inventory:client:ItemBox', src, sharedItem, "add", amount)
+            end
+            return result
+
+        elseif Framework.Name == "vorp" then
             return AwaitExport(function(cb)
                 exports.vorp_inventory:addItem(src, itemName, amount, metadata or {}, cb)
             end)
@@ -186,7 +287,19 @@ if IsDuplicityVersion() then
     end
 
     function FW.SubItem(src, itemName, amount, metadata)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return false end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player then return false end
+
+            local result = player.Functions.RemoveItem(itemName, amount)
+            local sharedItem = _lxrCore.Shared.Items and _lxrCore.Shared.Items[itemName]
+            if sharedItem then
+                TriggerClientEvent('lxr-inventory:client:ItemBox', src, sharedItem, "remove", amount)
+            end
+            return result
+
+        elseif Framework.Name == "vorp" then
             return AwaitExport(function(cb)
                 exports.vorp_inventory:subItem(src, itemName, amount, metadata or {}, cb)
             end)
@@ -208,7 +321,24 @@ if IsDuplicityVersion() then
     end
 
     function FW.SubItemById(src, itemId, amount)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return nil end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player then return nil end
+
+            local slot = tonumber(itemId)
+            if not slot then return nil end
+
+            local items = player.PlayerData.items or {}
+            for _, it in pairs(items) do
+                if it and it.slot == slot then
+                    local result = player.Functions.RemoveItem(it.name, amount or 1, slot)
+                    return result
+                end
+            end
+            return nil
+
+        elseif Framework.Name == "vorp" then
             if not exports.vorp_inventory.subItemById then return nil end
             local ok, res = pcall(function()
                 return AwaitExport(function(cb)
@@ -240,7 +370,25 @@ if IsDuplicityVersion() then
     end
 
     function FW.SetItemMetadata(src, itemId, metadata)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return nil end
+            local player = _lxrCore.Functions.GetPlayer(src)
+            if not player then return nil end
+
+            local slot = tonumber(itemId)
+            if not slot then return nil end
+
+            local items = player.PlayerData.items or {}
+            for _, it in pairs(items) do
+                if it and it.slot == slot then
+                    it.info = metadata or {}
+                    TriggerClientEvent('lxr-inventory:client:UpdatePlayerInventory', src, items)
+                    return true
+                end
+            end
+            return nil
+
+        elseif Framework.Name == "vorp" then
             if not exports.vorp_inventory.setItemMetadata then return nil end
             local ok, res = pcall(function()
                 return AwaitExport(function(cb)
@@ -273,7 +421,17 @@ if IsDuplicityVersion() then
     end
 
     function FW.RegisterUsableItem(itemName, callback)
-        if Framework.Name == "vorp" then
+        if Framework.Name == "lxrcore" then
+            if not _lxrCore then return end
+            _lxrCore.Functions.CreateUseableItem(itemName, function(src, itemData)
+                callback({
+                    source   = src,
+                    id       = itemData and itemData.slot or nil,
+                    metadata = itemData and itemData.info or {},
+                })
+            end)
+
+        elseif Framework.Name == "vorp" then
             if not exports.vorp_inventory.registerUsableItem then return end
             exports.vorp_inventory:registerUsableItem(itemName, function(data)
                 callback({
@@ -296,10 +454,12 @@ if IsDuplicityVersion() then
     end
 
     function FW.Notify(src, msg)
-        if Framework.Name == "rsgcore" then
+        if Framework.Name == "lxrcore" then
+            TriggerClientEvent('LXRCore:Notify', src, msg, 'primary', 5000)
+        elseif Framework.Name == "rsgcore" then
             TriggerClientEvent('RSGCore:Notify', src, msg, 'primary', 5000)
         else
-            TriggerClientEvent('cas-armour:client:notify', src, msg)
+            TriggerClientEvent('lxr-armour:client:notify', src, msg)
         end
     end
 

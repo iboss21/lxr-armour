@@ -1,10 +1,10 @@
-# [FREE] CAS Armour - Advanced Equipment & Armor System for RedM
+# 🐺 LXR Armour — Advanced Equipment & Armor System for RedM
 
 ## Overview
 
-**CAS Armour** is a fully featured, slot-based equipment system for RedM servers. It includes a custom NUI interface with drag-and-drop mechanics, 7 unique armor sets (70 pieces total), set bonuses with passive abilities, durability/wear mechanics, crafting stations, and deep stat-based gameplay.
+**LXR Armour** is a fully featured, slot-based equipment system for RedM servers by **wolves.land** (iBoss21 / The Lux Empire). It includes a custom NUI interface with drag-and-drop mechanics, 7 unique armor sets (70 pieces total), set bonuses with passive abilities, durability/wear mechanics, crafting stations, and deep stat-based gameplay.
 
-Built for **VORP** and **RSGCore** frameworks with automatic detection.
+Built for **LXR-Core**, **RSGCore**, and **VORP** frameworks with automatic detection.
 
 ---
 
@@ -89,22 +89,21 @@ Each set has **5 bonus tiers** that stack:
 
 ## Dependencies
 - [oxmysql](https://github.com/overextended/oxmysql)
-- [VORP Core](https://github.com/VORPCORE/vorp-core-lua) + [VORP Inventory](https://github.com/VORPCORE/vorp_inventory-lua) **OR** [RSGCore](https://github.com/Suspended/rsg-core) + RSG Inventory
+- [LXR-Core](https://github.com/iboss21/lxr-core) **OR** [RSGCore](https://github.com/Suspended/rsg-core) + RSG Inventory **OR** [VORP Core](https://github.com/VORPCORE/vorp-core-lua) + [VORP Inventory](https://github.com/VORPCORE/vorp_inventory-lua)
 
 ---
 
 ## Installation
 
-1. Download and place in your resources folder as `cas-armour`
+1. Download and place in your resources folder as `lxr-armour`
 2. Import the SQL files:
    - `sql/cas_armour_equipment.sql` - Equipment storage table
    - `sql/cas_armour_items.sql` - All 70 armor items + 14 crafting materials for VORP inventory
 3. Add to your `server.cfg`:
 ```
 ensure oxmysql
-ensure vorp_core
-ensure vorp_inventory
-ensure cas-armour
+ensure lxr-core
+ensure lxr-armour
 ```
 4. Configure in `shared/config.lua` - all tuning values are clearly documented
 
@@ -139,21 +138,21 @@ Everything is configurable in `shared/config.lua`:
 
 **Client-side:**
 ```lua
-exports['cas-armour']:GetEquipment()     -- Returns current equipment table
-exports['cas-armour']:GetStats()         -- Returns aggregated stats
-exports['cas-armour']:GetActivePassives() -- Returns active passive abilities
+exports['lxr-armour']:GetEquipment()     -- Returns current equipment table
+exports['lxr-armour']:GetStats()         -- Returns aggregated stats
+exports['lxr-armour']:GetActivePassives() -- Returns active passive abilities
 ```
 
 **Server-side:**
 ```lua
-exports['cas-armour']:GetEquipment(source) -- Returns player's equipment
+exports['lxr-armour']:GetEquipment(source) -- Returns player's equipment
 ```
 
 ---
 
 ## Technical Details
 
-- **Framework**: Auto-detects VORP or RSGCore on startup
+- **Framework**: Auto-detects LXR-Core, RSGCore, or VORP on startup
 - **Database**: oxmysql with JSON blob storage (single row per character)
 - **NUI**: HTML/JS with Tailwind CSS, jQuery UI for drag-and-drop
 - **Damage System**: Event-based detection with heal-back mechanism
@@ -162,19 +161,13 @@ exports['cas-armour']:GetEquipment(source) -- Returns player's equipment
 
 ---
 
-## Credits
+## Links
 
-- **CAS** - Core development
-- **UIforc** - NUI design
-
----
-
-## Source Code
-
-GitHub: https://github.com/codeaftersex/cas-armour
+- 🌐 Website: [wolves.land](https://www.wolves.land)
+- 💬 Discord: [discord.gg/CrKcWdfd3A](https://discord.gg/CrKcWdfd3A)
+- 🛒 Store: [theluxempire.tebex.io](https://theluxempire.tebex.io)
+- 👨‍💻 GitHub: [github.com/iBoss21](https://github.com/iBoss21)
 
 ---
 
-## License
-
-This resource is **free and open source**. You are free to use, modify, and distribute it. Credit is appreciated but not required.
+© 2026 iBoss21 / The Lux Empire | wolves.land | All Rights Reserved
